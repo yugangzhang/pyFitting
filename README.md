@@ -54,29 +54,9 @@ python
 
 ---
 
-## 🎯 What's Different from Your Old Code?
+## 🎯 A quick example
 
-### Old Way (BaseFitter)
-```python
-class MySAXSFitter(BaseFitter):
-    def __init__(self, table, config):
-        super().__init__(config)
-        self.table = table
-    
-    def model_function(self, q, r, sig, c1, c2):
-        m = self.table.get_polydisperse(q, r, sig)
-        return c1 * m + c2
-    
-    # ... many more methods
 
-fitter = MySAXSFitter(table, config)
-fitter.set_data(q, iq)
-result = fitter.fit()
-```
-
-**Problem:** Have to create new class every time! 😫
-
-### New Way (pyFitting)
 ```python
 from pyFitting import Fitter, ArrayData
 # Assume you have FormFactorModel (Phase 2)
@@ -86,11 +66,11 @@ model = FormFactorModel(table)  # Reusable!
 result = Fitter(data, model).fit()
 ```
 
-**Solution:** Reuse components! No subclassing! 🎉
+
 
 ---
 
-## ✅ What's Implemented (Phase 1)
+## ✅ What's Implemented 
 
 ### Core (100% Complete)
 - [x] 5 abstract interfaces
@@ -216,7 +196,7 @@ This will integrate your existing SAXS code!
 | Loss functions | 4 |
 | Optimizers | 7 methods |
 | Metrics | 12+ |
-| Development time | ~2 hours |
+| Development time | ~20 hours |
 | Test status | ✅ Working! |
 
 ---
@@ -270,7 +250,7 @@ This will integrate your existing SAXS code!
 
 1. **Installation:**
    ```bash
-   cd /mnt/user-data/outputs/pyFitting
+   cd pyFitting
    pip install -e .
    ```
 
@@ -289,9 +269,7 @@ This will integrate your existing SAXS code!
    # Your code here
    ```
 
-5. **Ready for Phase 2?**
-   - Let me know when you want to add SAXS support!
-   - Will integrate your existing form factor table
+5. **Todolist**
    - Will add CompositeModel for backgrounds
 
 ---
@@ -300,14 +278,10 @@ This will integrate your existing SAXS code!
 
 ### Option 1: Start Using It Now
 - Install the package
-- Try with your data
 - Report any issues
 
-### Option 2: Move to Phase 2
-- Add SAXS-specific components
-- Integrate your form factor table
+### Option 2: Add New Model
 - Add CompositeModel
-- Add power-law background
 
 ### Option 3: Add More Features
 - Global optimizers
