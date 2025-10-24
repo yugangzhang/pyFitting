@@ -100,7 +100,7 @@ __enamlcache__/
 # PyBuilder
 target/
 
-data/
+#data/
 results/
 
 

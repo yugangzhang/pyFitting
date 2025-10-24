@@ -1008,9 +1008,9 @@ If you use pyFitting in your research, please cite:
 ```bibtex
 @software{pyfitting,
   title = {pyFitting: A Comprehensive Python Library for Curve Fitting},
-  author = {Your Name},
+  author = {Yugang Zhang},
   year = {2025},
-  url = {https://github.com/yourusername/pyFitting}
+  url = {https://github.com/yugangzhang/pyFitting}
 }
 ```
 
@@ -1021,7 +1021,7 @@ If you use pyFitting in your research, please cite:
 - 📖 [Documentation](https://pyfitting.readthedocs.io)
 - 🐛 [Issue Tracker](https://github.com/yourusername/pyFitting/issues)
 - 💬 [Discussions](https://github.com/yourusername/pyFitting/discussions)
-- ✉️ Email: your.email@example.com
+- ✉️ Email: yuzhang@bnl.gov
 
 ---
 
