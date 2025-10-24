@@ -9,6 +9,7 @@ Note: matplotlib is an optional dependency. Install with:
 
 try:
     from pyFitting.visualization.plotters import (
+        plot_data,
         plot_fit,
         plot_residuals,
         plot_fit_with_residuals,

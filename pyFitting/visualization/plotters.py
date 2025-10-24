@@ -36,6 +36,84 @@ def _check_matplotlib():
         raise ImportError("matplotlib is required for visualization. Install with: pip install matplotlib")
 
 
+
+def plot_data(data, 
+             figsize: Tuple[float, float] = (6,4),
+             logx: bool = False,
+             logy: bool = False,
+             show_ci: bool = False,
+             title: Optional[str] = None,
+             xlabel: str = 'x',
+             ylabel: str = 'y',
+             save: Optional[str] = None,
+             **kwargs):
+    """
+    Plot Data.
+    
+    Parameters:
+    -----------
+    Data:  ArrayData
+    figsize : tuple
+        Figure size (width, height)
+    logx : bool
+        Use log scale for x-axis
+    logy : bool
+        Use log scale for y-axis
+    show_ci : bool
+        Show confidence intervals (if available in result)
+    title : str, optional
+        Plot title
+    xlabel : str
+        X-axis label
+    ylabel : str
+        Y-axis label
+    save : str, optional
+        Filename to save plot
+    **kwargs : dict
+        Additional matplotlib kwargs
+    
+    Returns:
+    --------
+    fig, ax : matplotlib figure and axes
+    """
+    _check_matplotlib()
+    
+    # Get data
+    x = data.get_x()
+    y_data = data.get_y()
+    
+    
+    # Create figure
+    fig, ax = plt.subplots(figsize=figsize)
+    
+    # Plot data
+    ax.plot(x, y_data, 'o', markersize=4, alpha=0.6, label='Data', color='#1f77b4')
+    
+    # Set scales
+    if logx:
+        ax.set_xscale('log')
+    if logy:
+        ax.set_yscale('log')
+    
+    # Labels
+    ax.set_xlabel(xlabel, fontsize=12)
+    ax.set_ylabel(ylabel, fontsize=12)
+    
+    if title is None:
+        title = f'Data'
+    ax.set_title(title, fontsize=14)
+    
+    ax.legend(loc='best', fontsize=10)
+    ax.grid(True, alpha=0.3, linewidth=0.5) 
+    
+    plt.tight_layout()
+    
+    if save:
+        plt.savefig(save, dpi=300, bbox_inches='tight')
+    
+    return fig, ax
+
+
 def plot_fit(result, 
              figsize: Tuple[float, float] = (10, 6),
              logx: bool = False,

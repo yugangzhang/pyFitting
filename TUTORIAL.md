@@ -648,13 +648,20 @@ bad             0.3456     45.678     8.23e-01
 pyFitting includes built-in plotting functions (requires matplotlib):
 
 ```python
-from pyFitting.visualization import (
+from pyFitting.visualization.plotters import (
+    plot_data,
     plot_fit,
     plot_residuals,
     plot_fit_with_residuals,
-    plot_corner,
-    plot_parameter_uncertainty,
-    compare_fits
+    plot_parameter_corners,
+    plot_diagnostics,
+    plot_comparison
+)
+from pyFitting.visualization.plot import (
+    plot1D,
+    colors_, markers_, lstyles_,
+    create_fig_ax, create_2ax_main_minor,
+     
 )
 ```
 
@@ -740,7 +747,7 @@ print(f"FWHM: {2.355 * result.parameters.values['sigma']:.2f} nm")
 print(f"R²: {result.metrics['r2']:.4f}")
 
 # Visualize
-plot_fit_with_residuals(result, xlabel='Wavelength (nm)', ylabel='Intensity')
+plot_fit_with_residuals(result, xlabel='Wavelength (nm)', ylabel='Intensity', figsize=[8,6], save='../images/example_peak_analysis.png')
 ```
 
 ![Peak Analysis](images/example_peak_analysis.png)
@@ -765,10 +772,13 @@ loss = HybridLoss(alpha=0.8, use_log=True)  # Better for exponentials
 result = Fitter(data, model, loss=loss).fit()
 
 # Calculate half-life
-half_life = np.log(2) / result.parameters.values['lam']
-print(f"Decay rate: {result.parameters.values['lam']:.4f} s⁻¹")
+half_life = np.log(2) / result.parameters.values['k']
+print(f"Decay rate: {result.parameters.values['k']:.4f} s⁻¹")
 print(f"Half-life: {half_life:.2f} s")
 print(f"Baseline: {result.parameters.values['c']:.2f}")
+
+fig, axes = plot_fit_with_residuals(result, xlabel='time (s)', ylabel='Signal', figsize=[8,6],save='../images/example_decay.png')
+
 ```
 
 ![Decay Curve](images/example_decay.png)
@@ -784,15 +794,12 @@ class DoubleGaussianModel(BaseModel):
         peak2 = A2 * np.exp(-0.5 * ((x - mu2) / sigma2)**2)
         return peak1 + peak2 + c
     
-    def get_parameters(self):
-        from pyFitting.core.types import ParameterSet
-        return ParameterSet(
-            values={
+    def get_initial_guess(self):
+        return {
                 'A1': 1.0, 'mu1': 4.0, 'sigma1': 0.5,
                 'A2': 1.0, 'mu2': 6.0, 'sigma2': 0.5,
                 'c': 0.0
             }
-        )
 
 # Generate two overlapping peaks
 x = np.linspace(0, 10, 200)
@@ -835,7 +842,7 @@ x = np.logspace(0, 2, 50)  # 1 to 100
 y = 50 * x**(-1.5) + np.random.normal(0, 0.5, len(x))
 
 # Transform to log-log space
-data = ArrayData(x, y).transform('log_log')
+data = ArrayData(x, y)#.transform('log_log')
 
 # Fit power law
 model = PowerLawModel()
@@ -852,6 +859,9 @@ plt.xlabel('x')
 plt.ylabel('y')
 plt.legend()
 plt.grid(True, alpha=0.3)
+
+fig, axes = plot_fit_with_residuals(result, xlabel='x', ylabel='y', figsize=[8,6],save='../images/example_powerlaw.png')
+
 ```
 
 ![Power Law](images/example_powerlaw.png)
@@ -887,11 +897,11 @@ print(f"  Peak position: {result_weighted.parameters.values['mu']:.3f}")
 print(f"  R²: {result_weighted.metrics['r2']:.4f}")
 
 # Compare
-from pyFitting.visualization import compare_fits
-compare_fits(
+from pyFitting.visualization import plot_comparison
+fig, ax = plot_comparison(
     [result_unweighted, result_weighted],
-    labels=['Unweighted', 'Weighted (peak region)']
-)
+    labels=['Unweighted', 'Weighted (peak region)'], figsize=[10,6],save='../images/example_weighted.png')
+ 
 ```
 
 ![Weighted Regions](images/example_weighted.png)

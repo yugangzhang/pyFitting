@@ -169,3 +169,86 @@ class PolynomialModel(BaseModel):
         coeffs = np.polyfit(x, y, self.degree)
         # Reverse order (polyfit returns highest degree first)
         return {f'c{i}': float(coeffs[::-1][i]) for i in range(self.degree + 1)}
+
+
+
+
+class DoubleGaussianModel(BaseModel):
+    """
+    Two Gaussian peaks.
+    
+    For complex models, data-driven initialization is ABSOLUTELY ESSENTIAL!
+    """
+    
+    def evaluate(self, x, A1, mu1, sigma1, A2, mu2, sigma2, c):
+        peak1 = A1 * np.exp(-0.5 * ((x - mu1) / sigma1)**2)
+        peak2 = A2 * np.exp(-0.5 * ((x - mu2) / sigma2)**2)
+        return peak1 + peak2 + c
+    
+
+    def get_initial_guess(self, x, y):
+        """
+        Intelligent data-driven guess for two peaks.
+        
+        Strategy:
+        1. Find two local maxima in the data
+        2. Estimate parameters for each peak
+        3. Estimate baseline
+        
+        This is MUCH more robust than fixed defaults!
+        """
+        from scipy.signal import find_peaks
+        
+        # Find baseline
+        c = np.percentile(y, 10)  # 10th percentile as baseline
+        
+        # Find peaks in data
+        peaks, properties = find_peaks(y - c, prominence=0.1 * (np.max(y) - c))
+        
+        if len(peaks) >= 2:
+            # Sort by prominence and take top 2
+            prominences = properties['prominences']
+            top_peaks = peaks[np.argsort(prominences)[-2:]]
+            top_peaks = np.sort(top_peaks)  # Sort by position
+            
+            # Peak 1
+            idx1 = top_peaks[0]
+            A1 = y[idx1] - c
+            mu1 = x[idx1]
+            sigma1 = (x[-1] - x[0]) / 20  # Rough guess
+            
+            # Peak 2
+            idx2 = top_peaks[1]
+            A2 = y[idx2] - c
+            mu2 = x[idx2]
+            sigma2 = (x[-1] - x[0]) / 20
+            
+        elif len(peaks) == 1:
+            # Only one peak found, place second peak elsewhere
+            idx1 = peaks[0]
+            A1 = y[idx1] - c
+            mu1 = x[idx1]
+            sigma1 = (x[-1] - x[0]) / 20
+            
+            # Place second peak at 1/3 of data range away
+            A2 = A1 / 2
+            mu2 = mu1 + (x[-1] - x[0]) / 3
+            sigma2 = sigma1
+            
+        else:
+            # No peaks found, use data-driven fallback
+            A1 = (np.max(y) - c) / 2
+            A2 = A1
+            mu1 = x[len(x) // 3]
+            mu2 = x[2 * len(x) // 3]
+            sigma1 = (x[-1] - x[0]) / 10
+            sigma2 = sigma1
+        
+        return {
+            'A1': A1, 'mu1': mu1, 'sigma1': sigma1,
+            'A2': A2, 'mu2': mu2, 'sigma2': sigma2,
+            'c': c
+        }
+
+
+    
