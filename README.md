@@ -117,6 +117,190 @@ result = Fitter(data, model).fit()
 **Total: ~2500 lines of code, 20 Python files** ✅
 
 ---
+# Documentation
+## 📚 Core Compoents
+### 1. Data 
+```python
+from pyFitting import ArrayData
+
+x = np.linspace(0, 10, 100)
+y = 2.5 * np.exp(-0.5 * ((x - 5) / 1)**2) + 0.1 + noise
+# Simple x, y data
+data = ArrayData(x, y)
+
+# With weights
+data = ArrayData(x, y, weights=weights)
+
+# Transform to log space
+data_log = data.transform('log')
+
+# Apply range mask
+data.apply_range_mask(x_min=0, x_max=10)
+```
+### 2. Models
+Built-in models:
+
+GaussianModel - Gaussian peak
+ExponentialModel - Exponential decay
+LinearModel - Linear function
+PowerLawModel - Power law (for backgrounds)
+PolynomialModel - Polynomial of any degree
+Custom models:
+```python
+from pyFitting import BaseModel
+
+class MyModel(BaseModel):
+    def evaluate(self, x, a, b, c):
+        return a * np.exp(b * x) + c
+    
+    def get_initial_guess(self, x, y):
+        return {'a': y.max(), 'b': 0.1, 'c': y.min()}
+
+model = MyModel()
+model.set_bounds(a=(0, 10), b=(-1, 1), c=(-1, 1))
+```
+### 3. Loss Functions
+```python
+from pyFitting import MSELoss, Chi2Loss, CorrelationLoss
+
+# Mean squared error (in log space)
+loss = MSELoss(use_log=True)
+
+# Chi-squared
+loss = Chi2Loss()
+
+# Correlation loss (good for SAXS)
+loss = CorrelationLoss(use_log=True)
+```
+### 4. Optimizers
+```python
+from pyFitting import LocalOptimizer
+
+# SLSQP (recommended - robust and fast)
+optimizer = LocalOptimizer('SLSQP')
+
+# Trust-region (most robust)
+optimizer = LocalOptimizer('trust-constr')
+
+# Powell (derivative-free)
+optimizer = LocalOptimizer('Powell')
+
+```
+### 5. Complete Example
+```python
+from pyFitting import (
+    Fitter,
+    ArrayData,
+    ExponentialModel,
+    MSELoss,
+    LocalOptimizer
+)
+
+# Data
+data = ArrayData(x, y)
+
+# Model
+model = ExponentialModel()
+model.set_parameters(A=1.0, k=0.5, c=0.0)
+model.set_bounds(A=(0, 10), k=(0, 5), c=(-1, 1))
+
+# Loss
+loss = MSELoss(use_log=True)
+
+# Optimizer
+optimizer = LocalOptimizer('SLSQP')
+
+# Fit
+fitter = Fitter(data, model, loss, optimizer)
+result = fitter.fit(verbose=True)
+
+# Results
+result.summary()
+result.to_dataframe().to_csv('fit_results.csv')
+```
+## 🔧 Advanced Usage
+
+### Compare Optimizers
+```python
+
+from pyFitting import compare_optimizers
+
+# Test multiple optimization methods
+results = compare_optimizers(
+    objective_function,
+    x0=initial_guess,
+    bounds=parameter_bounds,
+    methods=['SLSQP', 'trust-constr', 'Powell']
+)
+
+# Find best
+best_method = max(results, key=lambda k: results[k].fun)
+
+```
+###  Custom Loss Function
+```python
+from pyFitting import ILoss
+
+class MyLoss(ILoss):
+    def compute(self, y_data, y_model, weights=None):
+        # Your custom loss
+        return np.sum((y_data - y_model)**4)  # L4 norm
+
+loss = MyLoss()
+result = Fitter(data, model, loss=loss).fit()
+
+```
+
+# 📊 Examples
+See the examples/ directory for complete examples:
+
+simple_fit.py - Basic curve fitting
+gaussian_fit.py - Gaussian peak fitting
+exponential_fit.py - Exponential decay fitting
+
+
+# 🏗️ Architecture
+
+
+```python
+
+pyFitting/
+├── core/           # Interfaces and base types
+├── data/           # Data containers
+├── models/         # Models (Gaussian, Exponential, etc.)
+├── loss/           # Loss functions
+├── optimizers/     # Optimization algorithms
+├── evaluation/     # Metrics calculation
+└── workflow/       # Main Fitter class
+
+```
+
+# 🤝 Contributing
+
+Contributions welcome! Please:
+
+Fork the repository
+Create a feature branch
+Add tests for new features
+Submit a pull request
+
+# 📄 License
+MIT License - see LICENSE file for details
+
+# 🙏 Acknowledgments
+
+Built with:
+
+NumPy
+SciPy
+Pandas
+
+# 📮 Contact
+For questions or issues, please open an issue on GitHub.
+  
+
+---
+
 
 ## 🚀 Usage Examples
 
@@ -154,7 +338,33 @@ class MyModel(BaseModel):
 
 result = Fitter(data, MyModel()).fit()
 ```
+### Example 4: A quick Start
+```python
+from pyFitting import Fitter, ArrayData, GaussianModel
 
+# Your data
+x = np.linspace(0, 10, 100)
+y = 2.5 * np.exp(-0.5 * ((x - 5) / 1)**2) + 0.1 + noise
+
+# Create data object
+data = ArrayData(x, y)
+
+# Choose model
+model = GaussianModel()
+
+# Fit
+fitter = Fitter(data, model)
+result = fitter.fit()
+
+# View results
+result.summary()
+
+# Access fitted parameters
+print(result.parameters.values)
+print(f"R² = {result.metrics['r2']:.4f}")
+
+
+```
 ---
 
 ## 🔮 What's Next? (Phase 2)
@@ -293,6 +503,6 @@ This will integrate your existing SAXS code!
 
 
 ---
-
+pyFitting - Making curve fitting modular and reusable 🎯
 *Questions? Check the documentation files above!*
  
