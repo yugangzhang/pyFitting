@@ -34,7 +34,7 @@ For more examples, see:
 """
 
 # Core
-from .pyFittingcore import (
+from pyFitting.core import (
     FitSpace,
     OptimizerType,
     ParameterSet,
