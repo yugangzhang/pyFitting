@@ -24,7 +24,7 @@ __all__ = [
 ]
 
 
-class OverLapLoss(ILoss):
+class OverlapLoss(ILoss):
     """
     Overlap loss (negative overlap for minimization).
     

@@ -84,8 +84,29 @@ from pyFitting.utils import (
     get_similarity_by_overlap
 )
 
+from pyFitting.visualization.plotters import (
+        plot_fit,
+        plot_residuals,
+        plot_fit_with_residuals,
+        plot_parameter_corners,
+        plot_diagnostics,
+        plot_comparison
+    )
+from pyFitting.visualization.plot import (
+        plot1D,
+        colors_, markers_, lstyles_,
+        create_fig_ax, create_2ax_main_minor,
+         
+    )
 
+try:
+    import numpy as np
+    from typing import Optional, Tuple, List
+    import warnings
+    import matplotlib.pyplot as plt
 
+except:
+    pass
 
 __version__ = '0.1.0'
 __author__ = 'pyFitting Team'
