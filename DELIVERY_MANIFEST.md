@@ -29,10 +29,12 @@ pyFitting/
 │   │   └── fitter.py          # Fitter class
 │   ├── visualization/         # Plotting ⭐ NEW!
 │   │   └── plotters.py        # 6 plot functions
+│   │   └── plot.py            # 1 important plot functions
 │   └── utils/                 # Utilities ⭐ NEW!
 │       └── common.py          # 2 utility functions
 ├── examples/
 │   ├── simple_examples.py     # 5 examples
+│   ├── advanced_examples.py   # 5+ examples
 │   └── new_features_example.py # New features demo
 └── tests/
     └── (to be added)
