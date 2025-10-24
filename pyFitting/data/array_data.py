@@ -43,6 +43,7 @@ class ArrayData(IData):
     
     x: np.ndarray
     y: np.ndarray
+    y_errors: Optional[np.ndarray] = None
     weights: Optional[np.ndarray] = None
     mask: Optional[np.ndarray] = None
     _space: str = 'linear'

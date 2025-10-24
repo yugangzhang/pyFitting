@@ -98,6 +98,7 @@ pyFitting's `ArrayData` class provides a flexible container for your x-y data:
 from pyFitting import ArrayData
 
 # Basic usage
+data0 = ArrayData(x, y)
 data = ArrayData(x, y)
 
 # With weights
@@ -122,6 +123,15 @@ Remove outliers or focus on specific regions:
 # Focus on a specific x-range
 data.apply_range_mask(x_min=2.0, x_max=8.0)
 print(f"Points in range: {len(data)}")
+
+fig = plt.figure( figsize=[5,4])
+ax = fig.add_subplot(111)
+plot1D( x = data0.get_x(), y = data0.get_y()  ,   ax=ax, c='k', m='o', legend='raw' )
+plot1D( x = data.get_x(), y = data.get_y(), ax=ax, c='r', m='x',   legend='masked' )
+#plot1D( x = data_weighted .get_x(), y = data_weighted .get_y(), ax=ax, c='b', m='o',  )
+ax.set_title('mask')
+fig.savefig(  '../images/masking_example.png')
+
 ```
 
 #### Custom Masking
