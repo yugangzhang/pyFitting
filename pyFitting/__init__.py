@@ -60,7 +60,9 @@ from pyFitting.loss import (
     MSELoss,
     Chi2Loss,
     CorrelationLoss,
-    HybridLoss
+    HybridLoss,
+    OverlapLoss,
+
 )
 
 # Optimizers
@@ -74,6 +76,15 @@ from pyFitting.evaluation import StandardEvaluator
 
 # Workflow
 from pyFitting.workflow import Fitter
+
+
+# Utils
+from pyFitting.utils import (
+    get_ab_correlation,
+    get_similarity_by_overlap
+)
+
+
 
 
 __version__ = '0.1.0'
@@ -101,6 +112,7 @@ __all__ = [
     'Chi2Loss',
     'CorrelationLoss',
     'HybridLoss',
+    'OverlapLoss',
     
     # Optimizers
     'LocalOptimizer',
@@ -115,4 +127,10 @@ __all__ = [
     'ParameterSet',
     'OptimizeResult',
     'FitResult',
+
+    # Utils
+    'get_ab_correlation',
+   'get_similarity_by_overlap',
+
+
 ]

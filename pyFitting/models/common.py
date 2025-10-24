@@ -7,7 +7,7 @@ This module provides commonly used models like Gaussian, Exponential, Polynomial
 import numpy as np
 from typing import Dict
 
-from pyFitting.model.base import BaseModel
+from pyFitting.models.base import BaseModel
 
 
 __all__ = [

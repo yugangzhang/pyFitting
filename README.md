@@ -218,6 +218,45 @@ result = fitter.fit(verbose=True)
 result.summary()
 result.to_dataframe().to_csv('fit_results.csv')
 ```
+
+### 5. ✅ Visualization Module
+```python
+from pyFitting.visualization import (
+    plot_fit,                    # Basic fit plot
+    plot_residuals,              # Residuals only
+    plot_fit_with_residuals,     # 2x1 layout
+    plot_parameter_corners,      # Corner plot
+    plot_diagnostics,            # 4-panel diagnostics
+    plot_comparison              # Compare multiple fits
+
+    
+)
+
+pythonfrom pyFitting import Fitter, ArrayData, GaussianModel
+from pyFitting.visualization import plot_fit_with_residuals
+
+data = ArrayData(x, y)
+result = Fitter(data, GaussianModel()).fit()
+
+# Create beautiful plots
+plot_fit_with_residuals(result, save='analysis.png')
+
+
+```
+
+Features:
+
+Professional quality plots
+Publication-ready
+Log scale support
+Parameter annotations
+Confidence intervals
+Residual analysis
+
+Note: matplotlib is optional - install with pip install matplotlib
+
+
+
 ## 🔧 Advanced Usage
 
 ### Compare Optimizers

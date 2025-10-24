@@ -99,3 +99,8 @@ __enamlcache__/
 
 # PyBuilder
 target/
+
+data/
+results/
+
+

@@ -10,7 +10,7 @@ from scipy.stats import pearsonr
 
 from pyFitting.core.interfaces import IEvaluator
 from pyFitting.core.result import FitResult
-
+from pyFitting.utils.common import (get_ab_correlation, get_similarity_by_overlap,)
 
 __all__ = ['StandardEvaluator']
 
@@ -25,6 +25,7 @@ class StandardEvaluator(IEvaluator):
     - Chi-squared and reduced chi-squared
     - RMSE (root mean squared error)
     - MAE (mean absolute error)
+    - OverLap
     
     Examples:
     ---------
@@ -68,6 +69,12 @@ class StandardEvaluator(IEvaluator):
         ss_res_log = np.sum(log_residuals ** 2)
         ss_tot_log = np.sum((log_y_data - np.mean(log_y_data)) ** 2)
         metrics['r2_log'] = 1 - ss_res_log / (ss_tot_log + 1e-30)
+
+        metrics['overlap'] = get_similarity_by_overlap(y_data, y_fit)
+        metrics['overlap_log'] = get_similarity_by_overlap(log_y_data, log_y_fit)
+        
+        metrics['correlation'] = get_ab_correlation(y_data, y_fit)
+        metrics['correlation_log'] = get_ab_correlation(log_y_data, log_y_fit)        
         
         # Pearson correlation
         try:

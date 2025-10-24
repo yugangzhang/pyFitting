@@ -6,42 +6,37 @@
 
 ```
 pyFitting/
-├── setup.py                  # Installation script
-├── README.md                 # Complete documentation (2500+ words)
-├── pyFitting/                # Main package source
-│   ├── __init__.py          # Package exports
-│   ├── core/                # Core infrastructure (3 files)
-│   │   ├── __init__.py
-│   │   ├── interfaces.py    # Abstract interfaces
-│   │   ├── types.py         # Type definitions
-│   │   └── result.py        # FitResult class
-│   ├── data/                # Data handling (2 files)
-│   │   ├── __init__.py
-│   │   └── array_data.py    # ArrayData implementation
-│   ├── models/              # Mathematical models (3 files)
-│   │   ├── __init__.py
-│   │   ├── base.py          # BaseModel
-│   │   └── common.py        # 5 common models
-│   ├── loss/                # Loss functions (2 files)
-│   │   ├── __init__.py
-│   │   └── standard.py      # 4 loss functions
-│   ├── optimizers/          # Optimization (2 files)
-│   │   ├── __init__.py
-│   │   └── local.py         # LocalOptimizer
-│   ├── evaluation/          # Metrics (2 files)
-│   │   ├── __init__.py
-│   │   └── metrics.py       # StandardEvaluator
-│   ├── workflow/            # Main interface (2 files)
-│   │   ├── __init__.py
-│   │   └── fitter.py        # Fitter class
-│   └── utils/               # Utilities (1 file)
-│       └── __init__.py
-├── examples/                # Examples (1 file)
-│   └── simple_examples.py   # 5 complete examples
-└── tests/                   # Tests (to be added)
-    └── (empty)
+├── setup.py                    # Installation
+├── README.md                   # Documentation
+├── pyFitting/
+│   ├── __init__.py            # Main exports
+│   ├── core/                  # Interfaces & types
+│   │   ├── interfaces.py      # IData, IModel, ILoss, etc.
+│   │   ├── types.py           # ParameterSet, etc.
+│   │   └── result.py          # FitResult
+│   ├── data/                  # Data containers
+│   │   └── array_data.py      # ArrayData
+│   ├── models/                # Mathematical models
+│   │   ├── base.py            # BaseModel
+│   │   └── common.py          # 6 models
+│   ├── loss/                  # Loss functions
+│   │   └── standard.py        # 5 loss functions ⭐
+│   ├── optimizers/            # Optimization
+│   │   └── local.py           # LocalOptimizer
+│   ├── evaluation/            # Metrics
+│   │   └── metrics.py         # StandardEvaluator
+│   ├── workflow/              # Main interface
+│   │   └── fitter.py          # Fitter class
+│   ├── visualization/         # Plotting ⭐ NEW!
+│   │   └── plotters.py        # 6 plot functions
+│   └── utils/                 # Utilities ⭐ NEW!
+│       └── common.py          # 2 utility functions
+├── examples/
+│   ├── simple_examples.py     # 5 examples
+│   └── new_features_example.py # New features demo
+└── tests/
+    └── (to be added)
 
-Total: 20 Python files, ~2500 lines of code
 ```
 
 ### Documentation Files
@@ -99,6 +94,24 @@ Total: 20 Python files, ~2500 lines of code
 - [x] Fitter orchestrator class
 - [x] Clean API
 - [x] Verbose mode
+
+**Visualization Module**
+
+- [x] plot_fit() - Basic fit plot
+- [x] plot_residuals() - Residuals
+- [x] plot_fit_with_residuals() - Combined 2x1
+- [x] plot_parameter_corners() - Corner plot
+- [x] plot_diagnostics() - 4-panel diagnostics
+- [x] plot_comparison() - Compare multiple fits
+
+Features:
+
+Professional quality
+Publication-ready
+Log scale support
+Parameter annotations
+Confidence intervals
+
 
 **Documentation:**
 - [x] README with examples

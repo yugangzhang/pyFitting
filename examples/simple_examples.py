@@ -41,6 +41,7 @@ def example_1_gaussian():
     fitter = Fitter(data, model)
     result = fitter.fit(verbose=True)
     
+    
     # View results
     result.summary()
     
@@ -48,6 +49,12 @@ def example_1_gaussian():
     print(f"Fitted parameters:")
     for name, value in result.parameters.values.items():
         print(f"  {name} = {value:.4f}")
+
+
+    # Plot
+    plot_fit(result, logx=True, logy=True, save='fit.png')
+    plot_fit_with_residuals(result, save='analysis.png')
+    plot_diagnostics(result, save='diagnostics.png')        
     
     return result
 

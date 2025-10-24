@@ -8,7 +8,9 @@ from pyFitting.loss.standard import (
     MSELoss,
     Chi2Loss,
     CorrelationLoss,
-    HybridLoss
+    HybridLoss,
+    OverlapLoss,
+    
 )
 
 
@@ -16,6 +18,8 @@ __all__ = [
     'MSELoss',
     'Chi2Loss',
     'CorrelationLoss',
-    'HybridLoss'
+    'HybridLoss',
+    'OverlapLoss',
+    
 ]
  

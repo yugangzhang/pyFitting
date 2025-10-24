@@ -70,7 +70,7 @@ class Fitter:
         """Initialize fitter with components."""
         self.data = data
         self.model = model
-        self.loss = loss if loss is not None else MSELoss(use_log=True)
+        self.loss = loss if loss is not None else MSELoss(use_log=False)
         
         # Handle optimizer
         if optimizer is None:

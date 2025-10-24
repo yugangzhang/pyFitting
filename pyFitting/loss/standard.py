@@ -8,15 +8,60 @@ import numpy as np
 from typing import Optional
 
 from pyFitting.core.interfaces import ILoss
+from pyFitting.utils.common import (
+get_ab_correlation, 
+get_similarity_by_overlap,
+ 
+)
 
 
 __all__ = [
+    'OverLapLoss',
     'MSELoss',
     'Chi2Loss',
     'CorrelationLoss',
     'HybridLoss'
 ]
 
+
+class OverLapLoss(ILoss):
+    """
+    Overlap loss (negative overlap for minimization).
+    
+    Overlap = I12 / (I11 + I22 - |I12|)
+
+    where   I12 = dot(y_data, y_model)
+            I11 = dot(y_data, y_data)
+            I11 = dot(y_data, y_data)
+    
+    Loss = -Overlap (we minimize, so negate to maximize overlap)
+    Parameters:
+    -----------
+    use_log : bool
+        If True, compute MSE in log space
+    """
+    
+    def __init__(self, use_log: bool = False):
+        self.use_log = use_log
+    
+    def compute(self, y_data: np.ndarray, y_model: np.ndarray,
+                weights: Optional[np.ndarray] = None) -> float:
+        if self.use_log:
+            y_data = np.log(np.maximum(y_data, 1e-12))
+            y_model = np.log(np.maximum(y_model, 1e-12))
+        get_similarity_by_overlap(y_data, y_fit)  
+ 
+        residuals = get_similarity_by_overlap(y_data, y_model )      
+        
+        if weights is not None:
+            residuals = residuals * weights
+        
+        return float(np.mean(residuals))
+    
+    def __repr__(self) -> str:
+        space = "log" if self.use_log else "linear"
+        return f"OverLapLoss(space='{space}')"
+        
 
 class MSELoss(ILoss):
     """
