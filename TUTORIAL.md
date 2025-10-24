@@ -72,6 +72,9 @@ result = fitter.fit()
 print(f"Fit successful: {result.success}")
 print(f"R² = {result.metrics['r2']:.4f}")
 print(f"Parameters: {result.parameters.values}")
+
+fig, ax = plot_fit(result, logx=F, logy=F, figsize=[5,4] , save='../images/quickstart_fit.png')
+
 ```
 
 **Output:**
