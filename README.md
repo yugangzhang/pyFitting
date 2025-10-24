@@ -502,7 +502,8 @@ This will integrate your existing SAXS code!
 ---
 
 
----
+
 pyFitting - Making curve fitting modular and reusable 🎯
+---
 *Questions? Check the documentation files above!*
  
