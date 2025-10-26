@@ -46,6 +46,7 @@ def plot_data(data,
              xlabel: str = 'x',
              ylabel: str = 'y',
              save: Optional[str] = None,
+             fig_ax = None,  
              **kwargs):
     """
     Plot Data.
@@ -84,7 +85,10 @@ def plot_data(data,
     
     
     # Create figure
-    fig, ax = plt.subplots(figsize=figsize)
+    if fig_ax is None:
+        fig , ax = fig_ax
+    else:
+        fig, ax = plt.subplots(figsize=figsize)
     
     # Plot data
     ax.plot(x, y_data, 'o', markersize=4, alpha=0.6, label='Data', color='#1f77b4')
@@ -123,6 +127,7 @@ def plot_fit(result,
              xlabel: str = 'x',
              ylabel: str = 'y',
              save: Optional[str] = None,
+             fig_ax = None, 
              **kwargs):
     """
     Plot fit results.
@@ -162,7 +167,10 @@ def plot_fit(result,
     y_fit = result.y_fit
     
     # Create figure
-    fig, ax = plt.subplots(figsize=figsize)
+    if fig_ax is None:
+        fig , ax = fig_ax
+    else:    
+        fig, ax = plt.subplots(figsize=figsize)
     
     # Plot data
     ax.plot(x, y_data, 'o', markersize=4, alpha=0.6, label='Data', color='#1f77b4')
@@ -219,6 +227,7 @@ def plot_residuals(result,
                    xlabel: str = 'x',
                    title: Optional[str] = None,
                    save: Optional[str] = None,
+                   fig_ax = None,
                    **kwargs):
     """
     Plot residuals.
@@ -256,8 +265,10 @@ def plot_residuals(result,
         residuals = result.get_residuals()
         ylabel = 'Residuals'
         ylim = None
-    
-    fig, ax = plt.subplots(figsize=figsize)
+    if fig_ax is None:
+        fig , ax = fig_ax
+    else:    
+        fig, ax = plt.subplots(figsize=figsize)
     
     ax.plot(x, residuals, 'o', markersize=4, alpha=0.6, color='#1f77b4')
     ax.axhline(y=0, color='red', linestyle='--', linewidth=1.5, alpha=0.8)
@@ -328,7 +339,7 @@ def plot_fit_with_residuals(result,
     y_fit = result.y_fit
     residuals_pct = result.get_relative_residuals_percent()
     
-    # Create figure with GridSpec
+    # Create figure with GridSpec  
     fig = plt.figure(figsize=figsize)
     gs = gridspec.GridSpec(2, 2, height_ratios=[2, 1], width_ratios=[3, 1],
                           hspace=0.3, wspace=0.3)
