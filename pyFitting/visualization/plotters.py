@@ -85,7 +85,7 @@ def plot_data(data,
     
     
     # Create figure
-    if fig_ax is None:
+    if fig_ax is not None:
         fig , ax = fig_ax
     else:
         fig, ax = plt.subplots(figsize=figsize)
@@ -167,7 +167,7 @@ def plot_fit(result,
     y_fit = result.y_fit
     
     # Create figure
-    if fig_ax is None:
+    if fig_ax is not None:
         fig , ax = fig_ax
     else:    
         fig, ax = plt.subplots(figsize=figsize)
@@ -265,7 +265,7 @@ def plot_residuals(result,
         residuals = result.get_residuals()
         ylabel = 'Residuals'
         ylim = None
-    if fig_ax is None:
+    if fig_ax is not None:
         fig , ax = fig_ax
     else:    
         fig, ax = plt.subplots(figsize=figsize)
