@@ -6,7 +6,8 @@ This module provides local optimization algorithms using scipy.optimize.
 
 from typing import Callable, List, Tuple, Optional, Dict, Any
 import numpy as np
-from scipy.optimize import minimize
+#from scipy.optimize import minimize
+from scipy.optimize import  minimize, differential_evolution, basinhopping, dual_annealing, shgo
 
 from pyFitting.core.interfaces import IOptimizer
 from pyFitting.core.types import OptimizeResult
@@ -14,6 +15,9 @@ from pyFitting.core.types import OptimizeResult
 
 __all__ = ['LocalOptimizer']
 
+"""
+pyFitting.optimizers.global - Global Optimization Methods
+"""
 
 class LocalOptimizer(IOptimizer):
     """

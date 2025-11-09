@@ -13,7 +13,7 @@ from pyFitting.core.result import FitResult
 from pyFitting.utils.common import (get_ab_correlation, get_similarity_by_overlap,)
 
 __all__ = ['StandardEvaluator']
-
+MIN = 1e-18
 
 
 
@@ -33,8 +33,8 @@ def evaluate( y_data, y_fit, weights = None, n_params = 1, x_data = None ) -> Di
     ss_tot = np.sum((y_data - np.mean(y_data)) ** 2)
     metrics['r2'] = 1 - ss_res / (ss_tot + 1e-30)    
     # R² in log space
-    log_y_data = np.log(np.maximum(y_data, 1e-12))
-    log_y_fit = np.log(np.maximum(y_fit, 1e-12))
+    log_y_data = np.log(np.maximum(y_data, MIN))
+    log_y_fit = np.log(np.maximum(y_fit, MIN))
     log_residuals = log_y_data - log_y_fit
     ss_res_log = np.sum(log_residuals ** 2)
     ss_tot_log = np.sum((log_y_data - np.mean(log_y_data)) ** 2)
@@ -76,7 +76,7 @@ def evaluate( y_data, y_fit, weights = None, n_params = 1, x_data = None ) -> Di
     # Max absolute error
     metrics['max_error'] = np.max(np.abs(residuals))    
     # Mean relative error
-    rel_error = np.abs(residuals) / np.maximum(np.abs(y_data), 1e-12)
+    rel_error = np.abs(residuals) / np.maximum(np.abs(y_data), MIN)
     metrics['mean_rel_error'] = np.mean(rel_error)
     metrics['max_rel_error'] = np.max(rel_error)    
     return metrics

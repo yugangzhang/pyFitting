@@ -10,7 +10,7 @@ from typing import Optional, Dict, Any
 from pyFitting.core.interfaces import IData, IModel, ILoss, IOptimizer, IEvaluator
 from pyFitting.core.result import FitResult
 from pyFitting.loss import MSELoss
-from pyFitting.optimizers import LocalOptimizer
+from pyFitting.optimizers import LocalOptimizer,GlobalOptimizer, HybridOptimizer, MultiStartOptimizer 
 from pyFitting.evaluation import StandardEvaluator
 
 
@@ -37,8 +37,11 @@ class Fitter:
     loss : ILoss, optional
         Loss function (default: MSELoss)
     optimizer : IOptimizer or str, optional
-        Optimizer (default: LocalOptimizer('SLSQP'))
-        Can be string like 'SLSQP', 'L-BFGS-B', etc.
+        LocalOptimizer: can be one of ['SLSQP', 'L-BFGS-B', 'Powell', 'TNC', 'trust-constr', 'Nelder-Mead']
+
+    Global optimization methods that avoid local minima, can be one of ['differential_evolution',
+    'dual_annealing', 'basinhopping','shgo']
+    
     evaluator : IEvaluator, optional
         Evaluator for metrics (default: StandardEvaluator)
     
@@ -66,19 +69,29 @@ class Fitter:
                  model: IModel,
                  loss: Optional[ILoss] = None,
                  optimizer: Optional[IOptimizer] = None,
-                 evaluator: Optional[IEvaluator] = None):
+                 evaluator: Optional[IEvaluator] = None,
+                 optimizer_global = False, 
+                ):
         """Initialize fitter with components."""
         self.data = data
         self.model = model
         self.loss = loss if loss is not None else MSELoss(use_log=False)
-        
-        # Handle optimizer
-        if optimizer is None:
-            self.optimizer = LocalOptimizer('SLSQP')
-        elif isinstance(optimizer, str):
-            self.optimizer = LocalOptimizer(optimizer)
+        if optimizer_global:
+            # Handle optimizer
+            if optimizer is None:
+                self.optimizer = GlobalOptimizer('differential_evolution')
+            elif isinstance(optimizer, str):
+                self.optimizer = GlobalOptimizer(optimizer)
+            else:
+                self.optimizer = optimizer
         else:
-            self.optimizer = optimizer
+            # Handle optimizer
+            if optimizer is None:
+                self.optimizer = LocalOptimizer('SLSQP')
+            elif isinstance(optimizer, str):
+                self.optimizer = LocalOptimizer(optimizer)
+            else:
+                self.optimizer = optimizer
         
         self.evaluator = evaluator if evaluator is not None else StandardEvaluator()
     
@@ -101,30 +114,24 @@ class Fitter:
         def objective(params_array: np.ndarray) -> float:
             """Objective function to minimize."""
             # Convert array to parameter dict
-            params.from_array(params_array)
-            
+            params.from_array(params_array)            
             # Evaluate model
             try:
                 y_model = self.model.evaluate(x, **params.values)
             except Exception as e:
                 # If model evaluation fails, return large value
-                return 1e12
-            
+                return 1e12            
             # Check for invalid values
             if not np.all(np.isfinite(y_model)):
-                return 1e12
-            
+                return 1e12            
             # Compute loss
             try:
                 loss = self.loss.compute(y_data, y_model, weights)
             except Exception as e:
-                return 1e12
-            
+                return 1e12            
             if not np.isfinite(loss):
-                return 1e12
-            
-            return loss
-        
+                return 1e12            
+            return loss        
         return objective
     
     def fit(self, 

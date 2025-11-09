@@ -14,6 +14,7 @@ get_similarity_by_overlap,
  
 )
 
+MIN = 1e-10 #1e-18
 
 __all__ = [
     'OverLapLoss',
@@ -47,16 +48,17 @@ class OverlapLoss(ILoss):
     def compute(self, y_data: np.ndarray, y_model: np.ndarray,
                 weights: Optional[np.ndarray] = None) -> float:
         if self.use_log:
-            y_data = np.log(np.maximum(y_data, 1e-12))
-            y_model = np.log(np.maximum(y_model, 1e-12))
-        get_similarity_by_overlap(y_data, y_fit)  
+            y_data = np.log(np.maximum(y_data, MIN))
+            y_model = np.log(np.maximum(y_model, MIN))
+        #get_similarity_by_overlap(y_data, y_fit)  
  
         residuals = get_similarity_by_overlap(y_data, y_model )      
         
         if weights is not None:
             residuals = residuals * weights
+            return -float(np.mean(residuals))
         
-        return float(np.mean(residuals))
+        return  -residuals 
     
     def __repr__(self) -> str:
         space = "log" if self.use_log else "linear"
@@ -81,8 +83,8 @@ class MSELoss(ILoss):
     def compute(self, y_data: np.ndarray, y_model: np.ndarray,
                 weights: Optional[np.ndarray] = None) -> float:
         if self.use_log:
-            y_data = np.log(np.maximum(y_data, 1e-12))
-            y_model = np.log(np.maximum(y_model, 1e-12))
+            y_data = np.log(np.maximum(y_data, MIN))
+            y_model = np.log(np.maximum(y_model, MIN))
         
         residuals = (y_data - y_model) ** 2
         
@@ -114,15 +116,15 @@ class Chi2Loss(ILoss):
     def compute(self, y_data: np.ndarray, y_model: np.ndarray,
                 weights: Optional[np.ndarray] = None) -> float:
         if self.use_log:
-            y_data = np.log(np.maximum(y_data, 1e-12))
-            y_model = np.log(np.maximum(y_model, 1e-12))
+            y_data = np.log(np.maximum(y_data, MIN))
+            y_model = np.log(np.maximum(y_model, MIN))
         
         if weights is None:
             # Use Poisson-like errors
             sigma = np.sqrt(np.maximum(np.abs(y_data), 1.0))
         else:
             # weights = 1/sigma^2, so sigma = 1/sqrt(weights)
-            sigma = 1.0 / np.sqrt(np.maximum(weights, 1e-12))
+            sigma = 1.0 / np.sqrt(np.maximum(weights, MIN))
         
         residuals = (y_data - y_model) / sigma
         return float(np.sum(residuals ** 2))
@@ -152,8 +154,8 @@ class CorrelationLoss(ILoss):
     def compute(self, y_data: np.ndarray, y_model: np.ndarray,
                 weights: Optional[np.ndarray] = None) -> float:
         if self.use_log:
-            y_data = np.log(np.maximum(y_data, 1e-12))
-            y_model = np.log(np.maximum(y_model, 1e-12))
+            y_data = np.log(np.maximum(y_data, MIN))
+            y_model = np.log(np.maximum(y_model, MIN))
         
         if len(y_data) < 2:
             return 1.0
@@ -211,7 +213,7 @@ class HybridLoss(ILoss):
         
         # Normalize MSE
         if self.use_log:
-            y_trans = np.log(np.maximum(y_data, 1e-12))
+            y_trans = np.log(np.maximum(y_data, MIN))
         else:
             y_trans = y_data
         
