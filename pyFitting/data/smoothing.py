@@ -321,40 +321,7 @@ def compare_smoothers(x: np.ndarray, y: np.ndarray,
 
 
 ######################################
-def visualize_weights(q, iq, weights):
-    """
-    Visualize the computed weights overlaid on data.
-    Helps you understand what's being emphasized.
-    """
-    import matplotlib.pyplot as plt
-    
-    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8), sharex=True)
-    
-    # Top: Data with weight overlay
-    ax1.loglog(q, iq, 'b-', linewidth=2, label='I(q)')
-    ax1_twin = ax1.twinx()
-    ax1_twin.plot(q, weights * len(weights), 'r--', linewidth=2, 
-                  label='Weights (normalized)', alpha=0.7)
-    ax1_twin.fill_between(q, 0, weights * len(weights), alpha=0.2, color='red')
-    
-    ax1.set_ylabel('I(q)', fontsize=12, color='b')
-    ax1_twin.set_ylabel('Weight (relative)', fontsize=12, color='r')
-    ax1.legend(loc='upper left')
-    ax1_twin.legend(loc='upper right')
-    ax1.set_title('Data and Feature-Based Weights', fontsize=14)
-    ax1.grid(True, alpha=0.3)
-    
-    # Bottom: Weighted residual emphasis
-    ax2.plot(q, weights * len(weights), 'r-', linewidth=2)
-    ax2.fill_between(q, 0, weights * len(weights), alpha=0.3, color='red')
-    ax2.set_xlabel('q (Å⁻¹)', fontsize=12)
-    ax2.set_ylabel('Relative Weight', fontsize=12)
-    ax2.set_title('Weight Distribution (high = more emphasis)', fontsize=14)
-    ax2.set_xscale('log')
-    ax2.grid(True, alpha=0.3)
-    
-    plt.tight_layout()
-    plt.show()
+ 
 
 
 '''
