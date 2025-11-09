@@ -317,7 +317,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 Yugang Zhang - Brookhaven National Laboratory
 
-Project Link: [https://github.com/yourusername/data-smoothing](https://github.com/yourusername/data-smoothing)
+Project Link: [https://github.com/yugangzhang/data-smoothing](https://github.com/yugangzhang/pyFitting/blob/main/pyFitting/data/smoothing.py)
 
 ---
 
